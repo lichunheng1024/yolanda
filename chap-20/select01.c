@@ -14,14 +14,17 @@ int main(int argc, char **argv) {
 
     fd_set readmask;
     fd_set allreads;
+    //初始化描述符集合 全部设置为0
     FD_ZERO(&allreads);
+    //将标准输入设置为待检测
     FD_SET(0, &allreads);
+    //将连接套接字fd设置为待检测
     FD_SET(socket_fd, &allreads);
 
     for (;;) {
         readmask = allreads;
         int rc = select(socket_fd + 1, &readmask, NULL, NULL, NULL);
-
+        // if an error occurred ,select return -1
         if (rc <= 0) {
             error(1, errno, "select failed");
         }
